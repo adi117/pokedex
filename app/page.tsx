@@ -28,7 +28,7 @@ const typeColors: Record<string, string> = {
 
 export default function Home() {
 
-  const limit = 20;
+  const limit = 24;
   const router = useRouter();
 
   const { displayedPokemons, fetchPokemons, fetchPokemon, loading } = usePokemon();
@@ -82,7 +82,7 @@ export default function Home() {
 
       {/* Search Menu */}
       {initialized &&
-        <div className="flex gap-2">
+        <div className="flex gap-2 sticky md:relative top-0 w-full items-center justify-center bg-background py-3 shadow-2xs md:shadow-none">
           <input
             type="text"
             placeholder="Enter Pokemon name..."
@@ -107,7 +107,7 @@ export default function Home() {
 
       {/* Pokemon List */}
       {initialized &&
-        <div className="grid grid-cols-4 gap-5 w-full justify-between items-center text-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 w-full justify-between items-center text-center">
           {displayedPokemons?.map((pokemon) => (
             <div
               key={pokemon.name}
@@ -134,27 +134,29 @@ export default function Home() {
 
       {/* Pagination */}
       {initialized &&
-        <div className="flex justify-center items-center gap-4 mt-8">
-          <button
-            onClick={handlePrev}
-            disabled={page === 0 || loading}
-            className={`px-3 py-1 rounded-lg text-white ${page === 0
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-blue-500 hover:bg-blue-600"
-              }`}
-          >
-            Previous
-          </button>
+        <div className="w-full flex items-center justify-center sticky md:relative bottom-0 bg-background py-3 shadow-2xs md:shadow-none">
+          <div className="flex justify-center items-center gap-4">
+            <button
+              onClick={handlePrev}
+              disabled={page === 0 || loading}
+              className={`px-3 py-1 rounded-lg text-white ${page === 0
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600"
+                }`}
+            >
+              Previous
+            </button>
 
-          <span className="text-gray-700 font-medium">Page {page + 1}</span>
+            <span className="text-gray-700 font-medium">Page {page + 1}</span>
 
-          <button
-            onClick={handleNext}
-            disabled={loading}
-            className="px-3 py-1 rounded-lg bg-blue-500 hover:bg-blue-600 text-white"
-          >
-            Next
-          </button>
+            <button
+              onClick={handleNext}
+              disabled={loading}
+              className="px-3 py-1 rounded-lg bg-blue-500 hover:bg-blue-600 text-white"
+            >
+              Next
+            </button>
+          </div>
         </div>
       }
     </div >
