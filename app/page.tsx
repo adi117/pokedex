@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AuthForm from '../components/AuthForm';
+import { useAuth } from "@/context/useAuth";
 
 export default function Home() {
 
@@ -13,6 +14,7 @@ export default function Home() {
   const router = useRouter();
 
   const { displayedPokemons, fetchPokemons, fetchPokemon, initialized, setInitialized, loading } = usePokemon();
+  const { isLoggedIn } = useAuth();
 
   const [pokemonName, setPokemonName] = useState("");
   const [page, setPage] = useState(0);
@@ -48,7 +50,7 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-10 min-h-screen items-center justify-center bg-background font-sans m-10">
 
-      {!initialized &&
+      {!initialized && isLoggedIn &&
         <div>
           <button
             onClick={handleFirstFetch}
@@ -59,8 +61,9 @@ export default function Home() {
         </div>
       }
 
-      <AuthForm/>
-
+      {!isLoggedIn &&
+        <AuthForm />
+      }
 
       {/* Search Menu */}
       {initialized &&
