@@ -2,6 +2,7 @@
 
 import { usePokemon } from "@/context/usePokemon";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const typeColors: Record<string, string> = {
@@ -26,13 +27,15 @@ const typeColors: Record<string, string> = {
 };
 
 export default function Home() {
+
+  const limit = 20;
+  const router = useRouter();
+
   const { displayedPokemons, fetchPokemons, fetchPokemon, loading } = usePokemon();
 
   const [pokemonName, setPokemonName] = useState("");
   const [page, setPage] = useState(0);
   const [initialized, setInitialized] = useState(false);
-
-  const limit = 20;
 
   useEffect(() => {
     if (!initialized || pokemonName.trim()) return;
@@ -102,12 +105,14 @@ export default function Home() {
         </div>
       }
 
-
       {/* Pokemon List */}
       {initialized &&
         <div className="grid grid-cols-4 gap-5 w-full justify-between items-center text-center">
           {displayedPokemons?.map((pokemon) => (
-            <div key={pokemon.name} className="flex flex-col items-center bg-white shadow-2xs rounded-2xl p-5 transition hover:shadow-xl">
+            <div
+              key={pokemon.name}
+              className="flex flex-col items-center bg-white shadow-2xs rounded-2xl p-5 transition hover:shadow-xl"
+              onClick={() => router.push(`/pokemon-details/${pokemon.name}`)}>
               <Image
                 src={pokemon.sprites.front_default ?? 'https://placehold.co/400'}
                 alt={pokemon.name + ' sprites'}
