@@ -2,7 +2,7 @@
 
 import { usePokemon } from "@/context/usePokemon";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const typeColors: Record<string, string> = {
   normal: 'bg-[#A8A77A]',
@@ -26,14 +26,25 @@ const typeColors: Record<string, string> = {
 };
 
 export default function Home() {
-  const { pokemons, fetchPokemons } = usePokemon();
+  const { pokemons, fetchPokemons, loading } = usePokemon();
   const [pokemonName, setPokemonName] = useState("");
+  const [page, setPage] = useState(0);
+  const limit = 20;
 
-  const handleSearch = () => {
-    fetchPokemons(20, 0)
-  }
+  useEffect(() => {
+    fetchPokemons(limit, page * limit);
+  }, [page, fetchPokemons]);
+
+  const handlePrev = () => {
+    if (page > 0) setPage((prev) => prev - 1);
+  };
+
+  const handleNext = () => {
+    setPage((prev) => prev + 1);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background font-sans">
+    <div className="flex flex-col gap-10 min-h-screen items-center justify-center bg-background font-sans m-10">
       <div className="grid grid-cols-4 gap-5 w-full justify-between items-center text-center">
         {pokemons?.map((pokemon) => (
           <div key={pokemon.name} className="flex flex-col items-center bg-white shadow-2xs rounded-2xl p-5">
@@ -53,6 +64,31 @@ export default function Home() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Pagination controls */}
+      <div className="flex justify-center items-center gap-4 mt-8">
+        <button
+          onClick={handlePrev}
+          disabled={page === 0 || loading}
+          className={`px-3 py-1 rounded-lg text-white ${
+            page === 0
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-blue-500 hover:bg-blue-600"
+          }`}
+        >
+          Previous
+        </button>
+
+        <span className="text-gray-700 font-medium">Page {page + 1}</span>
+
+        <button
+          onClick={handleNext}
+          disabled={loading}
+          className="px-3 py-1 rounded-lg bg-blue-500 hover:bg-blue-600 text-white"
+        >
+          Next
+        </button>
       </div>
     </div>
   );

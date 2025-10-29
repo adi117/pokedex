@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useCallback, useContext, useState } from "react";
 import axios from "axios";
 import { Pokemon, PokemonContextType, PokemonListResponse } from "@/types/Pokemon";
 
@@ -12,7 +12,7 @@ export const PokemonProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchPokemon = async (name: string) => {
+  const fetchPokemon = useCallback(async (name: string) => {
     try {
       setLoading(true);
       setError(null);
@@ -24,9 +24,9 @@ export const PokemonProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setLoading(false);
     }
-  };
+  },[]);
 
-  const fetchPokemons = async(limit: number, offset: number) => {
+  const fetchPokemons = useCallback(async(limit: number, offset: number) => {
     try {
       setLoading(true)
       setError(null)
@@ -46,12 +46,7 @@ export const PokemonProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setLoading(false);
     }
-  }
-
-  useEffect(() => {
-    fetchPokemon('pikachu');
-    fetchPokemons(20, 0);
-  })
+  },[])
 
   return (
     <PokemonContext.Provider value={{ pokemon, pokemons, loading, error, fetchPokemon, fetchPokemons }}>
