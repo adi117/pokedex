@@ -5,6 +5,7 @@ import { typeColors } from "@/types/Utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import AuthForm from '../components/AuthForm';
 
 export default function Home() {
 
@@ -57,6 +58,8 @@ export default function Home() {
           </button>
         </div>
       }
+
+      <AuthForm/>
 
 
       {/* Search Menu */}
