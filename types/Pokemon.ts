@@ -46,6 +46,7 @@ export interface PokemonListResponse {
 export interface PokemonContextType {
   pokemon: Pokemon | null;
   pokemons: Pokemon[] | null;
+  displayedPokemons: Pokemon[] | null;
   loading: boolean;
   error: string | null;
   fetchPokemon: (name: string) => Promise<void>;

@@ -9,6 +9,7 @@ const PokemonContext = createContext<PokemonContextType | undefined>(undefined);
 export const PokemonProvider = ({ children }: { children: ReactNode }) => {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
   const [pokemons, setPokemons] = useState<Pokemon[] | null>(null);
+  const [displayedPokemons, setDisplayedPokemons] = useState<Pokemon[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,6 +19,7 @@ export const PokemonProvider = ({ children }: { children: ReactNode }) => {
       setError(null);
       const res = await axios.get<Pokemon>(`https://pokeapi.co/api/v2/pokemon/${name}`);
       setPokemon(res.data);
+      setDisplayedPokemons([res.data]);
     } catch (err) {
       setError("Failed to fetch Pokémon data");
       console.error(err);
@@ -40,6 +42,7 @@ export const PokemonProvider = ({ children }: { children: ReactNode }) => {
       )
 
       setPokemons(pokemonDetails);
+      setDisplayedPokemons(pokemonDetails)
     } catch (err) {
       setError("Failed to fetch Pokémon list");
       console.error(err);
@@ -49,7 +52,7 @@ export const PokemonProvider = ({ children }: { children: ReactNode }) => {
   },[])
 
   return (
-    <PokemonContext.Provider value={{ pokemon, pokemons, loading, error, fetchPokemon, fetchPokemons }}>
+    <PokemonContext.Provider value={{ pokemon, pokemons, displayedPokemons, loading, error, fetchPokemon, fetchPokemons }}>
       {children}
     </PokemonContext.Provider>
   );
