@@ -6,67 +6,74 @@ import { createContext, ReactNode, useCallback, useContext, useState } from "rea
 const getUsers = () => JSON.parse(localStorage.getItem('users') || '[]') as { username: string, password: string }[];
 
 const getInitialUser = (): string | null => {
-    if (typeof window !== 'undefined') {
-        return localStorage.getItem('loggedInUser');
-    }
-    return null;
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('loggedInUser');
+  }
+  return null;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<string | null>(getInitialUser);
+  const [user, setUser] = useState<string | null>(getInitialUser);
 
-    const encodePassword = (password: string): string => btoa(password);
+  const encodePassword = (password: string): string => btoa(password);
 
-    const register = useCallback((username: string, password: string): boolean => {
-        const users = getUsers();
-        
-        if (users.find(u => u.username === username)) {
-            alert("Registration failed: Username already exists");
-            return false;
-        }
+  const register = useCallback((username: string, password: string): boolean => {
+    const users = getUsers();
 
-        const encodedPassword = encodePassword(password);
-        
-        users.push({ username, password: encodedPassword });
-        localStorage.setItem('users', JSON.stringify(users));
-        
-        alert("Registration successful! You can now log in");
-        return true;
-    }, []);
+    if (users.find(u => u.username === username)) {
+      alert("Registration failed: Username already exists");
+      return false;
+    }
 
-    const login = useCallback((username: string, password: string): boolean => {
-        const users = getUsers();
-        const encodedInputPassword = encodePassword(password);
+    const encodedPassword = encodePassword(password);
 
-        const foundUser = users.find(
-            u => u.username === username && u.password === encodedInputPassword
-        );
+    users.push({ username, password: encodedPassword });
+    localStorage.setItem('users', JSON.stringify(users));
 
-        if (foundUser) {
-            localStorage.setItem('loggedInUser', username);
-            setUser(username); // Update React Context state
-            alert("Login successful!");
-            return true;
-        } else {
-            alert("Login failed: Invalid username or password");
-            return false;
-        }
-    }, []);
+    alert("Registration successful! You can now log in");
+    return true;
+  }, []);
 
-    const contextValue: AuthContextType = {
-        user,
-        isLoggedIn: !!user,
-        login,
-        register,
-    };
+  const login = useCallback((username: string, password: string): boolean => {
+    const users = getUsers();
+    const encodedInputPassword = encodePassword(password);
 
-    return (
-        <AuthContext.Provider value={contextValue}>
-            {children}
-        </AuthContext.Provider>
+    const foundUser = users.find(
+      u => u.username === username && u.password === encodedInputPassword
     );
+
+    if (foundUser) {
+      localStorage.setItem('loggedInUser', username);
+      setUser(username); // Update React Context state
+      alert("Login successful!");
+      return true;
+    } else {
+      alert("Login failed: Invalid username or password");
+      return false;
+    }
+  }, []);
+
+  const logout = useCallback(() => {
+    localStorage.removeItem('loggedInUser');
+    setUser(null);
+    alert("You have been logged out");
+  }, []);
+
+  const contextValue: AuthContextType = {
+    user,
+    isLoggedIn: !!user,
+    login,
+    register,
+    logout
+  };
+
+  return (
+    <AuthContext.Provider value={contextValue}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
