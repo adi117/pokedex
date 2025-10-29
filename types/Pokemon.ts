@@ -31,3 +31,23 @@ export interface Pokemon {
     };
   };
 }
+
+export interface PokemonListResponse {
+  count: number;
+  next: string;
+  previous: string;
+  results: {
+    name: string;
+    url: string;
+  }[]
+}
+
+
+export interface PokemonContextType {
+  pokemon: Pokemon | null;
+  pokemons: Pokemon[] | null;
+  loading: boolean;
+  error: string | null;
+  fetchPokemon: (name: string) => Promise<void>;
+  fetchPokemons: (limit: number, offset: number) => Promise<void>;
+}

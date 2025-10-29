@@ -2,19 +2,13 @@
 
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { Pokemon } from "@/types/Pokemon";
-
-interface PokemonContextType {
-  pokemon: Pokemon | null;
-  loading: boolean;
-  error: string | null;
-  fetchPokemon: (name: string) => Promise<void>;
-}
+import { Pokemon, PokemonContextType, PokemonListResponse } from "@/types/Pokemon";
 
 const PokemonContext = createContext<PokemonContextType | undefined>(undefined);
 
 export const PokemonProvider = ({ children }: { children: ReactNode }) => {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
+  const [pokemons, setPokemons] = useState<Pokemon[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,12 +26,35 @@ export const PokemonProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const fetchPokemons = async(limit: number, offset: number) => {
+    try {
+      setLoading(true)
+      setError(null)
+      const res = await axios.get<PokemonListResponse>(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`)
+
+      const pokemonDetails = await Promise.all(
+        res.data.results.map(async(p) => {
+          const details = await axios.get<Pokemon>(p.url);
+          return details.data;
+        })
+      )
+
+      setPokemons(pokemonDetails);
+    } catch (err) {
+      setError("Failed to fetch Pokémon list");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
-    fetchPokemon("ditto");
-  }, []);
+    fetchPokemon('pikachu');
+    fetchPokemons(20, 0);
+  })
 
   return (
-    <PokemonContext.Provider value={{ pokemon, loading, error, fetchPokemon }}>
+    <PokemonContext.Provider value={{ pokemon, pokemons, loading, error, fetchPokemon, fetchPokemons }}>
       {children}
     </PokemonContext.Provider>
   );
