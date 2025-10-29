@@ -118,8 +118,10 @@ export interface PokemonContextType {
   pokemonSpecies: PokemonSpecies | null;
   pokemons: Pokemon[] | null;
   displayedPokemons: Pokemon[] | null;
+  initialized: boolean;
   loading: boolean;
   error: string | null;
   fetchPokemon: (name: string) => Promise<void>;
   fetchPokemons: (limit: number, offset: number) => Promise<void>;
+  setInitialized: (value: boolean) => void
 }

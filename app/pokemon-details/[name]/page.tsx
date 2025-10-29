@@ -3,6 +3,7 @@
 import { usePokemon } from "@/context/usePokemon";
 import { typeColors } from "@/types/Utils";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -40,12 +41,26 @@ export default function PokemonDetailsPage() {
   };
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full px-10 lg:px-20">
       {/* Navigation */}
-      <div className="w-full">
-
+      <div className="w-full py-6">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors group"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 transform group-hover:-translate-x-1 transition-transform"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span className="font-semibold">Back to Pokédex</span>
+        </Link>
       </div>
-      <div className="flex flex-col md:flex-row items-center justify-center min-h-screen text-center w-screen px-10 md:px-20 gap-16">
+      <div className="flex flex-col md:flex-row items-center justify-center min-h-screen text-center gap-16 w-full">
         <div className="w-full md:w-1/2 h-fit md:h-screen flex flex-col justify-center">
           <div className="flex flex-col gap-2 items-start justify-center mb-6">
             <div className="flex gap-3 items-baseline">
@@ -116,8 +131,8 @@ export default function PokemonDetailsPage() {
                   <div
                     key={ability.ability.name}
                     className={`px-4 py-2 rounded-full font-medium text-sm ${ability.is_hidden
-                        ? "bg-purple-100 text-purple-700 border-2 border-purple-300"
-                        : "bg-gray-100 text-gray-700 border border-gray-300"
+                      ? "bg-purple-100 text-purple-700 border-2 border-purple-300"
+                      : "bg-gray-100 text-gray-700 border border-gray-300"
                       }`}
                   >
                     {ability.ability.name.replace('-', ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}

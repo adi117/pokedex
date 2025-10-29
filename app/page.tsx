@@ -11,11 +11,10 @@ export default function Home() {
   const limit = 24;
   const router = useRouter();
 
-  const { displayedPokemons, fetchPokemons, fetchPokemon, loading } = usePokemon();
+  const { displayedPokemons, fetchPokemons, fetchPokemon, initialized, setInitialized, loading } = usePokemon();
 
   const [pokemonName, setPokemonName] = useState("");
   const [page, setPage] = useState(0);
-  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     if (!initialized || pokemonName.trim()) return;
@@ -68,7 +67,7 @@ export default function Home() {
             placeholder="Enter Pokemon name..."
             value={pokemonName}
             onChange={(e) => setPokemonName(e.target.value)}
-            className="px-3 py-2 rounded-lg border border-gray-300 text-black"
+            className="px-3 py-1 rounded-lg border border-gray-300 text-black"
           />
           <button
             onClick={handleSearch}

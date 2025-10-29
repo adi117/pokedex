@@ -13,6 +13,7 @@ export const PokemonProvider = ({ children }: { children: ReactNode }) => {
   const [displayedPokemons, setDisplayedPokemons] = useState<Pokemon[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [initialized, setInitialized] = useState(false);
 
   const fetchPokemon = useCallback(async (name: string) => {
     try {
@@ -57,7 +58,7 @@ export const PokemonProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   return (
-    <PokemonContext.Provider value={{ pokemon, pokemons, displayedPokemons, loading, error, fetchPokemon, fetchPokemons, pokemonSpecies }}>
+    <PokemonContext.Provider value={{ pokemon, pokemons, displayedPokemons, loading, error, fetchPokemon, fetchPokemons, pokemonSpecies, initialized, setInitialized }}>
       {children}
     </PokemonContext.Provider>
   );
